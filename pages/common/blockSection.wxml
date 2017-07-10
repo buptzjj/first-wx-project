@@ -4,7 +4,7 @@
     <view class="main-section-image">
       <image src="{{item.avator}}"></image>
       <view class="main-section-badge" wx:if="{{item.alarmNum}}">
-          {{item.alarmNum}}
+        {{item.alarmNum}}
       </view>
     </view>
     <view class="main-section-text">
@@ -14,6 +14,24 @@
       <text class="main-section-attr">
         {{item.attr}}
       </text>
+    </view>
+  </view>
+</template>
+<template name="blockSection2">
+  <view class="main-section">
+    <view class="main-section-image">
+      <image src="{{item.avator}}"></image>
+    </view>
+    <view class="main-section-text">
+      <text class="main-section-title2">
+        序列号：{{item.name}}
+      </text>
+      <text class="main-section-attr2">
+        所属合同：{{item.attr}}
+      </text>
+    </view>
+    <view class="main-section-image2">
+      <image src="../../img/right.png"></image>
     </view>
   </view>
 </template>

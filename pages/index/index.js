@@ -3,10 +3,11 @@
 var app = getApp()
 Page({
   data: {
-    topTabItems: ['出口', '机房'],
+    topTabItems: ['出口', '机房', '档案'],
     currentTopItem: 0,
     envList: [],
     idcList: [],
+    cardList: [],
     swiperHeight: "0",
     currentProject: "北京移动",
     actionSheetHidden: true,
@@ -70,33 +71,50 @@ Page({
         name: '缓存出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
         avator: '../../img/signal.png',
-        alarmNum:7
+        alarmNum: 7
       }, {
         id: 2,
         name: 'IDC出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
         avator: '../../img/signal.png',
-        alarmNum:13
+        alarmNum: 13
       }, {
         id: 3,
         name: '省内出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
         avator: '../../img/signal.png',
-        alarmNum:'...'
+        alarmNum: '...'
       },
       {
         id: 4,
         name: '城域网出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
         avator: '../../img/signal.png',
-        alarmNum:12
+        alarmNum: 12
       }],
       idcList: [{
         id: 0,
         name: '望京机房',
         attr: '服务器：15台，探针：10台，交换机：3台',
         avator: '../../img/idc.png',
-        alarmNum:3
+        alarmNum: 3
+      }],
+      cardList: [{
+        id: 0,
+        name: 'a',
+        attr: '合同1',
+        avator: '../../img/server2.jpg'
+      },
+      {
+        id: 1,
+        name: 'ab',
+        attr: '合同2',
+        avator: '../../img/server2.jpg'
+      }, {
+        id: 2,
+        name: 'abc',
+        attr: '合同3',
+        avator: '../../img/server2.jpg'
       }]
     })
   },

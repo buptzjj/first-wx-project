@@ -1,5 +1,6 @@
 <view class="btn-area">
   <navigator class="nav-btn active" url="navigate?title=navigate">出口</navigator>
   <navigator class="nav-btn" url="redirect?title=redirect">机房</navigator>
+  <navigator class="nav-btn" url="redirect?title=redirect">档案</navigator>
 </view>
 

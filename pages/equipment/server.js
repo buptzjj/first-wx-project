@@ -13,27 +13,33 @@ Page({
     idcList: [],
     rackList: [],
     envList: [],
+    envnamelist: [],
+    envNameList: [],
     roleList: [],
     modalTitle: '',
-    curServerItem: {}
+    curServerItem: {},
+    text: '',
+    h: 0
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var that = this;
     var serialNumber = options.serial_number || '';
     var serverItem = this.getServerInfo(serialNumber);
 
     var attrList = this.refreshAttrList(serverItem);
+    var envNameList = this.refreshAttrList2(serverItem);
     var statusList = [{
-      id: 31,
+      id: 301,
       name: '在用'
     }, {
-      id: 32,
+      id: 302,
       name: '待用'
     }, {
-      id: 33,
+      id: 303,
       name: '下线'
     }];
     statusList.map(function (d) {
@@ -41,10 +47,10 @@ Page({
     })
 
     var idcList = [{
-      id: 11,
+      id: 101,
       name: '芳村机房'
-    },{
-      id: 12,
+    }, {
+      id: 102,
       name: '三水机房'
     }];
     idcList.map(function (d) {
@@ -52,10 +58,10 @@ Page({
     })
 
     var rackList = [{
-      id: 21,
+      id: 201,
       name: '1号机架'
-    },{
-      id: 22,
+    }, {
+      id: 202,
       name: '2号机架'
     }];
     rackList.map(function (d) {
@@ -65,25 +71,40 @@ Page({
     var envList = [{
       id: 0,
       name: '省网'
-    },{
+    }, {
       id: 1,
       name: 'IDC'
-    },{
+    }, {
       id: 2,
       name: '缓存出口'
     }];
     envList.map(function (d) {
-      d.checked = serverItem.envName === d.name ? true : false;
+      d.checked2 = 0;
+      if (serverItem.envNameList.length != 0) {
+        for (var i = 0, len = serverItem.envNameList.length; i < len; i++) {
+          if (d.id === Number(serverItem.envNameList[i])) {
+            d.checked2 = d.checked2 + 1;
+          }
+        }
+      }
+
+      if (d.checked2 == 1) {
+        d.checked = true;
+      } else {
+        d.checked = false;
+      }
+
     })
+    that.data.h = 0;
 
     var roleList = [{
-      id: 41,
+      id: 401,
       name: '采集服务器'
-    },{
-      id: 42,
+    }, {
+      id: 402,
       name: 'NameNode'
-    },{
-      id: 43,
+    }, {
+      id: 403,
       name: 'DataNode'
     }];
     roleList.map(function (d) {
@@ -93,6 +114,7 @@ Page({
       serialNumber: serialNumber,
       ipAddr: serverItem.ipAddr,
       attrList: attrList,
+      envNameList: envNameList,
       statusList: statusList,
       idcList: idcList,
       rackList: rackList,
@@ -100,7 +122,6 @@ Page({
       roleList: roleList,
       curServerItem: serverItem
     })
-    //console.log(idcList[0].id);
   },
 
   /**
@@ -191,12 +212,21 @@ Page({
     return attrList;
   },
 
+  refreshAttrList2: function (serverItem) {
+    var envNameList = [{
+      key: 'env列表',
+      index: 'envNameList'
+    }];
+    envNameList.map(function (d) {
+      d.value = serverItem[d.index];
+    })
+    return envNameList;
+  },
+
   clickToEdit: function (e) {
     var c = [];
     c = e.currentTarget.dataset.item.List;
-    //var f=c === 'envList' ? true : false;
-    //console.log(f);
-    if (c === 'envList'){
+    if (c === 'envList') {
       this.setData({
         modalTitle: '选择' + e.currentTarget.dataset.item.key,
         modalHidden: false,
@@ -204,7 +234,7 @@ Page({
         checkboxHidden: false,
         modalList: this.data[c]
       })
-    }else{
+    } else {
       this.setData({
         modalTitle: '选择' + e.currentTarget.dataset.item.key,
         modalHidden: false,
@@ -213,7 +243,7 @@ Page({
         modalList: this.data[c]
       })
     }
-    
+
   },
 
   confirm: function () {
@@ -234,11 +264,42 @@ Page({
         that.data.curServerItem.rack = d.name;
       }
     });
-    that.data.envList.forEach(function (d) {
-      if (d.checked) {
-        that.data.curServerItem.envName = d.name;
-      }
-    });
+    if (that.data.h == 1) {
+      that.data.envList.forEach(function (d) {
+        if (d.checkedNum == 1) {
+          d.checked = true;
+        } else {
+          d.checked = false;
+        }
+        
+      });
+      that.data.curServerItem.envName = that.data.text;
+      that.data.curServerItem.envNameList = that.data.envnamelist;
+    } else {
+      that.data.envList.map(function (d) {
+        d.checked2 = 0;
+        if (that.data.curServerItem.envNameList.length != 0) {
+          for (var i = 0, len = that.data.curServerItem.envNameList.length; i < len; i++) {
+            if (d.id === Number(that.data.curServerItem.envNameList[i])) {
+              d.checked2 = d.checked2 + 1;
+            }
+          }
+        }
+
+        if (d.checked2 == 1) {
+          d.checked = true;
+        } else {
+          d.checked = false;
+        }
+
+      })
+      //console.log(that.data.curServerItem.envName);
+      that.data.curServerItem.envName = that.data.curServerItem.envName;
+      that.data.curServerItem.envNameList = that.data.curServerItem.envNameList;
+
+    }
+
+
     that.data.roleList.forEach(function (d) {
       if (d.checked) {
         that.data.curServerItem.role = d.name;
@@ -246,9 +307,11 @@ Page({
     });
     wx.setStorageSync("serverInfo", that.data.curServerItem);
     var attrList = that.refreshAttrList(that.data.curServerItem);
+    var envNameList = that.refreshAttrList2(that.data.curServerItem);
     that.setData({
       modalHidden: true,
-      attrList: attrList
+      attrList: attrList,
+      envNameList: envNameList
     });
   },
   /**
@@ -264,44 +327,81 @@ Page({
    */
   radioChange: function (e) {
     var that = this;
-    that.data.statusList.map(function (d) {
-      d.checked = e.detail.value == d.id ? true : false;
-    })
-    that.data.idcList.map(function (d) {
-      d.checked = e.detail.value == d.id ? true : false;
-    })
-    that.data.rackList.map(function (d) {
-      d.checked = e.detail.value == d.id ? true : false;
-    })
-    that.data.envList.map(function (d) {
-      d.checked = e.detail.value == d.id ? true : false;
-    })
-    that.data.roleList.map(function (d) {
-      d.checked = e.detail.value == d.id ? true : false;
-    })
+    if ((e.detail.value > 300) && (e.detail.value < 400)) {
+      that.data.statusList.map(function (d) {
+        d.checked = e.detail.value == d.id ? true : false;
+      })
+    }
+
+    if ((e.detail.value > 100) && (e.detail.value < 200)) {
+      that.data.idcList.map(function (d) {
+        d.checked = e.detail.value == d.id ? true : false;
+      })
+    }
+
+    if ((e.detail.value > 200) && (e.detail.value < 300)) {
+      that.data.rackList.map(function (d) {
+        d.checked = e.detail.value == d.id ? true : false;
+      })
+    }
+
+    if ((e.detail.value >= 0) && (e.detail.value < 100)) {
+      that.data.envList.map(function (d) {
+        d.checked = e.detail.value == d.id ? true : false;
+      })
+    }
+
+    if ((e.detail.value > 400) && (e.detail.value < 500)) {
+      that.data.roleList.map(function (d) {
+        d.checked = e.detail.value == d.id ? true : false;
+
+      })
+    }
   },
   /**
    * 多选框选择操作
    */
-  checkboxgroupBindchange: function(e){
+  checkboxgroupBindchange: function (e) {
     var that = this;
     var temp1 = e.detail.value
-    //console.log(this)
     var temp2 = ''
-    
-    if (temp1.length!=0){
-      if (temp1.length<3){
-        for (var i = 0, len = temp1.length; i < len; i++){
-          temp2 = temp2 + this.data.envList[temp1[i]].name+'  '
+    that.data.envList.map(function (d) {
+      d.checkedNum = 0;
+      if (e.detail.value.length != 0) {
+        that.data.h = 1;
+        for (i = 0; i < e.detail.value.length; i++) {
+          if (d.id == e.detail.value[i]) {
+            d.checkedNum = d.checkedNum + 1;
+          }
         }
-        that.data.curServerItem.envName = temp2;
-        
-      }else{
-        temp2 = temp2 + this.data.envList[temp1[0]].name + '  ' + this.data.envList[temp1[1]].name + '等'
-        that.data.curServerItem.envName = temp2;
+      } else {
+        d.checkedNum = 0;
       }
-    }else{
-      that.data.curServerItem.envName = '';
+
+    })
+
+    if (temp1.length != 0) {
+      if (temp1.length < 3) {
+        for (var i = 0, len = temp1.length; i < len; i++) {
+          temp2 = temp2 + this.data.envList[temp1[i]].name + '  '
+        }
+        this.setData({
+          text: temp2,
+          envnamelist: e.detail.value
+        })
+      } else {
+        temp2 = temp2 + this.data.envList[temp1[0]].name + '  ' + this.data.envList[temp1[1]].name + '等';
+        this.setData({
+          text: temp2,
+          envnamelist: e.detail.value
+        })
+      }
+    } else {
+      this.setData({
+        text: '',
+        envnamelist: e.detail.value
+      })
+      
     }
   }
 

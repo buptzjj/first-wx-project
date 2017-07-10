@@ -103,7 +103,7 @@
 .select-area-text {
   text-align: center;
   color: #aaa;
-  width:50%;
+  width:33%;
   height: 78rpx;
   line-height: 78rpx;
 }

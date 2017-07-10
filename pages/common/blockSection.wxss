@@ -20,6 +20,16 @@
   height: 90rpx;
   padding:15rpx 15rpx 15rpx 15rpx;
 }
+.main-section-image2 {
+  display:flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.main-section-image2 image{
+  width:50rpx;
+  height: 50rpx;
+  padding:15rpx 15rpx 15rpx 15rpx;
+}
 
 .main-section-text {
   display: flex;
@@ -36,6 +46,18 @@
 }
 
 .main-section-attr {
+  font-size:30rpx;
+  color:#aaa;
+  margin-bottom: 30rpx;
+}
+
+.main-section-title2 {
+  width:450rpx;
+  font-size: 40rpx
+}
+
+.main-section-attr2 {
+  width:450rpx;
   font-size:30rpx;
   color:#aaa;
   margin-bottom: 30rpx;
